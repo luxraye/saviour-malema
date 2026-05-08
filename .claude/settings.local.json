@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yarn add *)",
+      "Bash(npx vite *)",
+      "Bash(timeout 8 yarn dev)",
+      "Bash(yarn build *)"
+    ]
+  }
+}

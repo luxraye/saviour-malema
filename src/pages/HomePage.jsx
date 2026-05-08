@@ -1,0 +1,487 @@
+import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight, Heart, CheckCircle, Users, CalendarCheck, Handshake } from "lucide-react";
+import { MomentWheel3D } from "../components/MomentWheel3D";
+import { BlogCard } from "../components/BlogCard";
+import { useMoments } from "../hooks/useMoments";
+import { useBlogPosts } from "../hooks/useBlogPosts";
+import { usePartners } from "../hooks/usePartners";
+import { useSiteSettings } from "../hooks/useSiteSettings";
+import { useDonationModal } from "../context/DonationContext";
+import { defaultServices, defaultTeam } from "../lib/constants";
+import { formatDate } from "../utils/formatDate";
+
+const ACCENT_CLASSES = {
+  ember: "text-ember border-ember/30 bg-ember/10",
+  gold:  "text-gold  border-gold/30  bg-gold/10",
+  grove: "text-grove border-grove/30 bg-grove/10",
+};
+
+const STAT_BAR = [
+  { value: "500+", label: "Families reached monthly", icon: Heart },
+  { value: "350+", label: "Learners supported", icon: CheckCircle },
+  { value: "48",   label: "Volunteer drives", icon: CalendarCheck },
+  { value: "6",    label: "Active programmes", icon: Users },
+];
+
+export function HomePage() {
+  const { moments } = useMoments();
+  const { posts: blogPosts } = useBlogPosts({ publishedOnly: true });
+  const { partners } = usePartners();
+  const { pledgeSettings } = useSiteSettings();
+  const { openDonation } = useDonationModal();
+
+  const [pledge, setPledge] = useState(pledgeSettings.defaultAmount);
+  const [activeMoment, setActiveMoment] = useState(0);
+
+  const impact = useMemo(() => {
+    const u1 = Math.round(pledge / pledgeSettings.unit1Divisor);
+    const u2 = Math.max(pledgeSettings.unit2Min, Math.round(pledge / pledgeSettings.unit2Divisor));
+    return { u1, u2 };
+  }, [pledge, pledgeSettings]);
+
+  const currentMoment = moments[activeMoment] ?? moments[0];
+  const featuredPosts = blogPosts.slice(0, 3);
+  const featuredPartners = partners.filter((p) => p.featured);
+
+  function spinWheel(direction) {
+    setActiveMoment((i) => (i + direction + moments.length) % moments.length);
+  }
+
+  return (
+    <>
+      {/* ── HERO ─────────────────────────────────────────── */}
+      <section
+        id="home"
+        className="relative min-h-screen bg-cover bg-center"
+        style={{
+          backgroundImage:
+            "linear-gradient(135deg,rgba(10,20,34,0.88),rgba(22,121,111,0.38)),url('https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=2400&q=85')",
+        }}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(242,201,76,0.12),transparent_40%)]" />
+
+        <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-5 pb-24 pt-32 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:pb-32 lg:pt-36">
+          <div>
+            <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold text-white/90 shadow-glass backdrop-blur-xl">
+              <CheckCircle className="size-4 text-gold" aria-hidden="true" />
+              Community-first NGO · Botswana
+            </p>
+            <h1 className="max-w-2xl text-5xl font-black leading-[0.95] sm:text-6xl lg:text-7xl">
+              Restoring Dignity,<br />
+              <span className="text-gold">Building Futures.</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-8 text-white/80">
+              The Saviour Malema Foundation serves less privileged families through food relief,
+              education support, youth development, and dignity-centred community outreach.
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <button
+                type="button"
+                onClick={() => openDonation()}
+                className="inline-flex items-center gap-2 rounded-full bg-gold px-7 py-4 text-sm font-black text-midnight shadow-xl shadow-gold/20 transition hover:-translate-y-0.5 hover:shadow-gold/30"
+              >
+                <Heart className="size-4" aria-hidden="true" />
+                Donate / Get Involved
+              </button>
+              <a
+                href="#programs"
+                className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-7 py-4 text-sm font-black text-white shadow-glass backdrop-blur-xl transition hover:bg-white/20"
+              >
+                See Our Programs
+                <ArrowRight className="size-4" aria-hidden="true" />
+              </a>
+            </div>
+          </div>
+
+          {/* Pledge Estimator card */}
+          <div className="glass-panel animate-float p-6 sm:p-7">
+            <p className="text-xs font-black uppercase tracking-[0.2em] text-gold">
+              Live pledge estimator
+            </p>
+            <p className="mt-3 text-sm leading-6 text-white/80">
+              A monthly pledge of{" "}
+              <strong className="text-white">
+                {pledgeSettings.currency}{pledge.toLocaleString()}
+              </strong>{" "}
+              can provide roughly{" "}
+              <strong className="text-white">{impact.u1} {pledgeSettings.unit1Label}</strong> or{" "}
+              <strong className="text-white">
+                {impact.u2} {pledgeSettings.unit2Label}
+              </strong>
+              .
+            </p>
+            <input
+              aria-label="Monthly pledge amount"
+              className="mt-5 w-full accent-gold"
+              type="range"
+              min={pledgeSettings.min}
+              max={pledgeSettings.max}
+              step={pledgeSettings.step}
+              value={pledge}
+              onChange={(e) => setPledge(Number(e.target.value))}
+            />
+            <div className="mt-2 flex justify-between text-xs font-bold text-white/50">
+              <span>{pledgeSettings.currency}{pledgeSettings.min}</span>
+              <span>{pledgeSettings.currency}{pledgeSettings.max.toLocaleString()}</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => openDonation(pledge)}
+              className="mt-5 w-full inline-flex items-center justify-center gap-2 rounded-full bg-gold px-5 py-3 text-sm font-black text-midnight transition hover:-translate-y-0.5"
+            >
+              <Heart className="size-4" />
+              Start with {pledgeSettings.currency}{pledge.toLocaleString()}/month
+            </button>
+
+            <div className="mt-5 grid grid-cols-2 gap-3 border-t border-white/10 pt-5">
+              {STAT_BAR.slice(0, 4).map(({ value, label, icon: Icon }) => (
+                <div key={label} className="rounded-lg border border-white/10 bg-white/5 p-3">
+                  <div className="flex items-center gap-1.5">
+                    <Icon className="size-3.5 text-gold" aria-hidden="true" />
+                    <span className="text-xl font-black text-white">{value}</span>
+                  </div>
+                  <p className="mt-1 text-[11px] font-semibold leading-4 text-white/55">{label}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── STAT BAND ────────────────────────────────────── */}
+      <section className="bg-gold py-5">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-px px-5 sm:px-8 lg:grid-cols-4">
+          {STAT_BAR.map(({ value, label, icon: Icon }) => (
+            <div key={label} className="flex items-center gap-3 px-4 py-3">
+              <Icon className="size-6 shrink-0 text-midnight/60" aria-hidden="true" />
+              <div>
+                <p className="text-2xl font-black text-midnight">{value}</p>
+                <p className="text-[11px] font-bold uppercase tracking-wide text-midnight/60">{label}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── PROGRAMS / SERVICES ──────────────────────────── */}
+      <section id="programs" className="bg-midnight px-5 py-24 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="max-w-2xl">
+            <p className="section-kicker">Our programmes</p>
+            <h2 className="section-title">How we show up for communities.</h2>
+            <p className="mt-5 leading-7 text-white/65">
+              Six focused programmes, each targeting a distinct dimension of need — from immediate
+              food relief to long-term youth development.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {defaultServices.map(({ id, icon: Icon, title, description, stat, accent }) => (
+              <article
+                key={id}
+                className="group rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:border-white/20 hover:bg-white/8"
+              >
+                <div
+                  className={`inline-flex items-center justify-center rounded-xl border p-3 ${ACCENT_CLASSES[accent]}`}
+                >
+                  <Icon className="size-6" aria-hidden="true" />
+                </div>
+                <h3 className="mt-5 text-lg font-black text-white">{title}</h3>
+                <p className="mt-2 text-sm leading-6 text-white/65">{description}</p>
+                <p className={`mt-4 text-xs font-black uppercase tracking-wide ${ACCENT_CLASSES[accent].split(" ")[0]}`}>
+                  {stat}
+                </p>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-10 text-center">
+            <button
+              type="button"
+              onClick={() => openDonation()}
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/8 px-7 py-3 text-sm font-black text-white transition hover:bg-white/15"
+            >
+              <Handshake className="size-4" />
+              Support a programme
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── ABOUT US ─────────────────────────────────────── */}
+      <section id="about" className="bg-[#0d1420] px-5 py-24 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
+
+            {/* Foundation story */}
+            <div>
+              <p className="section-kicker">About us</p>
+              <h2 className="section-title">Built on a promise to serve.</h2>
+              <p className="mt-5 leading-7 text-white/65">
+                The Saviour Malema Foundation was established in February 2024 in Botswana with
+                one conviction: that every family deserves to be treated with dignity, regardless
+                of circumstance.
+              </p>
+              <p className="mt-4 leading-7 text-white/65">
+                What began as a small volunteer circle has grown into a structured organisation
+                running six active programmes — from food relief and education support to elder care
+                and youth development. We are transparent, community-driven, and relentlessly
+                focused on practical impact.
+              </p>
+
+              <div className="mt-8 grid gap-4">
+                {[
+                  {
+                    title: "Dignity first",
+                    text: "Every intervention respects the humanity of the people we serve.",
+                  },
+                  {
+                    title: "Radical transparency",
+                    text: "Our donations, processes, and outcomes are documented and shared openly.",
+                  },
+                  {
+                    title: "Community ownership",
+                    text: "Programmes are designed with communities, not just delivered to them.",
+                  },
+                ].map(({ title, text }) => (
+                  <div key={title} className="flex gap-4">
+                    <div className="mt-1.5 size-2 shrink-0 rounded-full bg-gold" />
+                    <div>
+                      <p className="text-sm font-black text-white">{title}</p>
+                      <p className="text-sm leading-6 text-white/55">{text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                type="button"
+                onClick={() => openDonation()}
+                className="mt-9 inline-flex items-center gap-2 rounded-full bg-gold px-6 py-3 text-sm font-black text-white shadow-lg shadow-gold/20 transition hover:-translate-y-0.5"
+              >
+                <Heart className="size-4" />
+                Join our mission
+              </button>
+            </div>
+
+            {/* Team grid */}
+            <div>
+              <p className="mb-5 text-xs font-black uppercase tracking-[0.2em] text-white/30">
+                Our team
+              </p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                {defaultTeam.map((member) => (
+                  <div
+                    key={member.id}
+                    className="rounded-2xl border border-white/8 bg-white/3 p-5 transition hover:border-white/15"
+                  >
+                    <img
+                      src={member.photo_url}
+                      alt={member.name}
+                      className="size-16 rounded-full object-cover ring-2 ring-gold/30"
+                    />
+                    <h3 className="mt-4 font-black text-white">{member.name}</h3>
+                    <p className="text-xs font-bold text-gold">{member.role}</p>
+                    <p className="mt-2 text-sm leading-6 text-white/55">{member.bio}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ── MOMENTS WHEEL ───────────────────────────────── */}
+      <section
+        id="moments"
+        className="relative px-5 py-24 sm:px-8"
+        style={{
+          background:
+            "linear-gradient(180deg,#111827 0%,#0d1822 50%,#111827 100%)",
+        }}
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(244,96,54,0.15),transparent_40%)]" />
+        <div className="relative mx-auto max-w-7xl">
+          <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+            <div>
+              <p className="section-kicker">Living timeline</p>
+              <h2 className="section-title">A spinning wheel of defining moments.</h2>
+              <p className="mt-5 max-w-sm leading-7 text-white/65">
+                Spin through donations, community milestones, anniversaries, and outreach moments
+                that define the foundation's journey.
+              </p>
+
+              {currentMoment && (
+                <article className="glass-panel mt-8 overflow-hidden">
+                  <img
+                    className="h-56 w-full object-cover"
+                    src={currentMoment.image_url || currentMoment.image}
+                    alt=""
+                  />
+                  <div className="p-5">
+                    <div className="flex flex-wrap gap-2 text-xs font-black uppercase tracking-wide">
+                      <span className="rounded-full bg-gold px-3 py-1 text-midnight">
+                        {currentMoment.category}
+                      </span>
+                      <span className="rounded-full bg-white/10 px-3 py-1 text-white/70">
+                        {formatDate(currentMoment.date)}
+                      </span>
+                    </div>
+                    <h3 className="mt-4 text-xl font-black">{currentMoment.title}</h3>
+                    <p className="mt-3 text-sm leading-7 text-white/70">{currentMoment.impact}</p>
+                  </div>
+                </article>
+              )}
+            </div>
+
+            <MomentWheel3D
+              moments={moments}
+              activeMoment={activeMoment}
+              onSpin={spinWheel}
+              onSelect={setActiveMoment}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* ── LATEST UPDATES ──────────────────────────────── */}
+      <section id="updates" className="bg-midnight px-5 py-24 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="flex flex-wrap items-end justify-between gap-5">
+            <div>
+              <p className="section-kicker">Latest updates</p>
+              <h2 className="section-title">Stories from the ground.</h2>
+            </div>
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-2 text-sm font-bold text-gold transition hover:text-white"
+            >
+              View all updates
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Link>
+          </div>
+
+          {featuredPosts.length > 0 ? (
+            <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredPosts.map((post) => (
+                <BlogCard key={post.id} post={post} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-10 glass-panel p-10 text-center">
+              <p className="text-white/40">No updates published yet.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* ── PARTNERS ─────────────────────────────────────── */}
+      <section id="partners" className="bg-[#0a0f1a] px-5 py-20 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="text-center">
+            <p className="section-kicker">Partners & collaborators</p>
+            <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">
+              The organisations walking with us.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-white/55">
+              We amplify impact through trusted partnerships — from food redistribution and healthcare
+              to youth employment and education.
+            </p>
+          </div>
+
+          <div className="mt-12 flex flex-wrap justify-center gap-4">
+            {featuredPartners.map((partner) => {
+              const initials = partner.name
+                .split(" ")
+                .map((w) => w[0])
+                .slice(0, 2)
+                .join("");
+              return (
+                <a
+                  key={partner.id}
+                  href={partner.website || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-5 py-3.5 transition hover:border-gold/30 hover:bg-white/10"
+                >
+                  {partner.logo_url ? (
+                    <img
+                      src={partner.logo_url}
+                      alt={partner.name}
+                      className="h-9 w-auto object-contain"
+                    />
+                  ) : (
+                    <div className="grid size-9 shrink-0 place-items-center rounded-lg bg-gold/15 text-xs font-black text-gold">
+                      {initials}
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-sm font-black text-white group-hover:text-gold transition">
+                      {partner.name}
+                    </p>
+                    {partner.description && (
+                      <p className="text-xs text-white/45">{partner.description}</p>
+                    )}
+                  </div>
+                </a>
+              );
+            })}
+          </div>
+
+          <div className="mt-10 text-center">
+            <button
+              type="button"
+              onClick={() => openDonation()}
+              className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/8 px-6 py-3 text-sm font-black text-white transition hover:border-gold/30 hover:text-gold"
+            >
+              <Handshake className="size-4" />
+              Become a partner
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── PLEDGE / CTA BAND ───────────────────────────── */}
+      <section
+        className="relative overflow-hidden bg-gold px-5 py-20 sm:px-8"
+      >
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(244,96,54,0.25),transparent_55%)]" />
+        <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-6 text-center">
+          <p className="text-sm font-black uppercase tracking-[0.22em] text-midnight/60">
+            Make a difference
+          </p>
+          <h2 className="max-w-2xl text-4xl font-black leading-tight text-midnight sm:text-5xl">
+            Every pledge builds something real.
+          </h2>
+          <p className="max-w-xl text-base leading-7 text-midnight/75">
+            A monthly commitment of just{" "}
+            <strong>P{pledgeSettings.defaultAmount}</strong> provides{" "}
+            <strong>
+              {Math.round(pledgeSettings.defaultAmount / pledgeSettings.unit1Divisor)}{" "}
+              {pledgeSettings.unit1Label}
+            </strong>{" "}
+            or{" "}
+            <strong>
+              {Math.max(
+                pledgeSettings.unit2Min,
+                Math.round(pledgeSettings.defaultAmount / pledgeSettings.unit2Divisor),
+              )}{" "}
+              {pledgeSettings.unit2Label}
+            </strong>{" "}
+            to a family in need.
+          </p>
+          <button
+            type="button"
+            onClick={() => openDonation()}
+            className="inline-flex items-center gap-2 rounded-full bg-midnight px-8 py-4 text-sm font-black text-white shadow-2xl transition hover:-translate-y-0.5"
+          >
+            <Heart className="size-4" />
+            Get involved today
+          </button>
+        </div>
+      </section>
+    </>
+  );
+}

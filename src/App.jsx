@@ -1,0 +1,65 @@
+import { Routes, Route } from "react-router-dom";
+import { DonationProvider } from "./context/DonationContext";
+import { DonationModal } from "./components/DonationModal";
+import { Navbar } from "./components/Navbar";
+import { Footer } from "./components/Footer";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+import { useDonationModal } from "./context/DonationContext";
+import { HomePage } from "./pages/HomePage";
+import { BlogPage } from "./pages/BlogPage";
+import { BlogPostPage } from "./pages/BlogPostPage";
+import { LoginPage } from "./pages/LoginPage";
+import { AdminLayout } from "./pages/admin/AdminLayout";
+import { DashboardAdmin } from "./pages/admin/DashboardAdmin";
+import { MomentsAdmin } from "./pages/admin/MomentsAdmin";
+import { BlogAdmin } from "./pages/admin/BlogAdmin";
+import { DonationsAdmin } from "./pages/admin/DonationsAdmin";
+import { PartnersAdmin } from "./pages/admin/PartnersAdmin";
+import { SettingsAdmin } from "./pages/admin/SettingsAdmin";
+
+function AppShell() {
+  const { openDonation } = useDonationModal();
+
+  return (
+    <div className="min-h-screen bg-midnight text-white">
+      <DonationModal />
+      <div className="fixed inset-x-0 top-0 z-50">
+        <Navbar />
+      </div>
+
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="/blog/:slug" element={<BlogPostPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<DashboardAdmin />} />
+          <Route path="moments" element={<MomentsAdmin />} />
+          <Route path="blog" element={<BlogAdmin />} />
+          <Route path="inquiries" element={<DonationsAdmin />} />
+          <Route path="partners" element={<PartnersAdmin />} />
+          <Route path="settings" element={<SettingsAdmin />} />
+        </Route>
+      </Routes>
+
+      <Footer openDonation={openDonation} />
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <DonationProvider>
+      <AppShell />
+    </DonationProvider>
+  );
+}
+
+export default App;
