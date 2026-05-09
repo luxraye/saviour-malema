@@ -8,7 +8,9 @@ import { useBlogPosts } from "../hooks/useBlogPosts";
 import { usePartners } from "../hooks/usePartners";
 import { useSiteSettings } from "../hooks/useSiteSettings";
 import { useDonationModal } from "../context/DonationContext";
-import { defaultServices, defaultTeam } from "../lib/constants";
+import { useServices } from "../hooks/useServices";
+import { useTeam } from "../hooks/useTeam";
+import { SERVICE_ICON_MAP } from "../lib/constants";
 import { formatDate } from "../utils/formatDate";
 
 const ACCENT_CLASSES = {
@@ -30,6 +32,8 @@ export function HomePage() {
   const { partners } = usePartners();
   const { pledgeSettings } = useSiteSettings();
   const { openDonation } = useDonationModal();
+  const { services } = useServices();
+  const { members } = useTeam();
 
   const [pledge, setPledge] = useState(pledgeSettings.defaultAmount);
   const [activeMoment, setActiveMoment] = useState(0);
@@ -177,23 +181,26 @@ export function HomePage() {
           </div>
 
           <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {defaultServices.map(({ id, icon: Icon, title, description, stat, accent }) => (
-              <article
-                key={id}
-                className="group rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:border-white/20 hover:bg-white/8"
-              >
-                <div
-                  className={`inline-flex items-center justify-center rounded-xl border p-3 ${ACCENT_CLASSES[accent]}`}
+            {[...services].sort((a, b) => a.order - b.order).map(({ id, icon_name, title, description, stat, accent }) => {
+              const Icon = SERVICE_ICON_MAP[icon_name] || SERVICE_ICON_MAP.Package;
+              return (
+                <article
+                  key={id}
+                  className="group rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:border-white/20 hover:bg-white/8"
                 >
-                  <Icon className="size-6" aria-hidden="true" />
-                </div>
-                <h3 className="mt-5 text-lg font-black text-white">{title}</h3>
-                <p className="mt-2 text-sm leading-6 text-white/65">{description}</p>
-                <p className={`mt-4 text-xs font-black uppercase tracking-wide ${ACCENT_CLASSES[accent].split(" ")[0]}`}>
-                  {stat}
-                </p>
-              </article>
-            ))}
+                  <div
+                    className={`inline-flex items-center justify-center rounded-xl border p-3 ${ACCENT_CLASSES[accent]}`}
+                  >
+                    <Icon className="size-6" aria-hidden="true" />
+                  </div>
+                  <h3 className="mt-5 text-lg font-black text-white">{title}</h3>
+                  <p className="mt-2 text-sm leading-6 text-white/65">{description}</p>
+                  <p className={`mt-4 text-xs font-black uppercase tracking-wide ${ACCENT_CLASSES[accent].split(" ")[0]}`}>
+                    {stat}
+                  </p>
+                </article>
+              );
+            })}
           </div>
 
           <div className="mt-10 text-center">
@@ -271,16 +278,22 @@ export function HomePage() {
                 Our team
               </p>
               <div className="grid gap-4 sm:grid-cols-2">
-                {defaultTeam.map((member) => (
+                {[...members].sort((a, b) => a.order - b.order).map((member) => (
                   <div
                     key={member.id}
                     className="rounded-2xl border border-white/8 bg-white/3 p-5 transition hover:border-white/15"
                   >
-                    <img
-                      src={member.photo_url}
-                      alt={member.name}
-                      className="size-16 rounded-full object-cover ring-2 ring-gold/30"
-                    />
+                    {member.photo_url ? (
+                      <img
+                        src={member.photo_url}
+                        alt={member.name}
+                        className="size-16 rounded-full object-cover ring-2 ring-gold/30"
+                      />
+                    ) : (
+                      <div className="grid size-16 place-items-center rounded-full bg-gold/15 text-lg font-black text-gold ring-2 ring-gold/20">
+                        {member.name.split(" ").map((w) => w[0]).slice(0, 2).join("")}
+                      </div>
+                    )}
                     <h3 className="mt-4 font-black text-white">{member.name}</h3>
                     <p className="text-xs font-bold text-gold">{member.role}</p>
                     <p className="mt-2 text-sm leading-6 text-white/55">{member.bio}</p>

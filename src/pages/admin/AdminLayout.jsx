@@ -12,17 +12,21 @@ import {
   X,
   Sparkles,
   Bell,
+  LayoutGrid,
+  Users,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useDonations } from "../../hooks/useDonations";
 
 const sidebarLinks = [
-  { to: "/admin",           label: "Dashboard",  icon: LayoutDashboard, end: true },
-  { to: "/admin/moments",   label: "Moments",    icon: CalendarHeart,   end: false },
-  { to: "/admin/blog",      label: "Articles",   icon: FileText,        end: false },
-  { to: "/admin/inquiries", label: "Inquiries",  icon: Inbox,           end: false },
-  { to: "/admin/partners",  label: "Partners",   icon: Handshake,       end: false },
-  { to: "/admin/settings",  label: "Settings",   icon: Settings,        end: false },
+  { to: "/admin",              label: "Dashboard",  icon: LayoutDashboard, end: true },
+  { to: "/admin/moments",      label: "Moments",    icon: CalendarHeart,   end: false },
+  { to: "/admin/blog",         label: "Articles",   icon: FileText,        end: false },
+  { to: "/admin/inquiries",    label: "Inquiries",  icon: Inbox,           end: false },
+  { to: "/admin/programmes",   label: "Programmes", icon: LayoutGrid,      end: false },
+  { to: "/admin/team",         label: "Team",       icon: Users,           end: false },
+  { to: "/admin/partners",     label: "Partners",   icon: Handshake,       end: false },
+  { to: "/admin/settings",     label: "Settings",   icon: Settings,        end: false },
 ];
 
 export function AdminLayout() {

@@ -16,6 +16,8 @@ import { BlogAdmin } from "./pages/admin/BlogAdmin";
 import { DonationsAdmin } from "./pages/admin/DonationsAdmin";
 import { PartnersAdmin } from "./pages/admin/PartnersAdmin";
 import { SettingsAdmin } from "./pages/admin/SettingsAdmin";
+import { ServicesAdmin } from "./pages/admin/ServicesAdmin";
+import { TeamAdmin } from "./pages/admin/TeamAdmin";
 
 function AppShell() {
   const { openDonation } = useDonationModal();
@@ -44,6 +46,8 @@ function AppShell() {
           <Route path="moments" element={<MomentsAdmin />} />
           <Route path="blog" element={<BlogAdmin />} />
           <Route path="inquiries" element={<DonationsAdmin />} />
+          <Route path="programmes" element={<ServicesAdmin />} />
+          <Route path="team" element={<TeamAdmin />} />
           <Route path="partners" element={<PartnersAdmin />} />
           <Route path="settings" element={<SettingsAdmin />} />
         </Route>
