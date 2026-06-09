@@ -6,10 +6,12 @@ const footerLinks = {
   Foundation: [
     { label: "About Us", href: "/#about" },
     { label: "Our Programs", href: "/#programs" },
+    { label: "School Needs", href: "/#schools" },
     { label: "Moments Wheel", href: "/#moments" },
     { label: "Our Partners", href: "/#partners" },
   ],
   "Get Involved": [
+    { label: "Needs Report", href: "/urgent-needs" },
     { label: "Updates & Blog", href: "/blog" },
     { label: "Volunteer", href: null, modal: true },
     { label: "Donate Funds", href: null, modal: true },

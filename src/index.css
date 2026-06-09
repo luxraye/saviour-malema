@@ -207,3 +207,41 @@
     width: 11.5rem;
   }
 }
+
+/* ── Print / PDF booklet ─────────────────────────────── */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+  }
+
+  /* Hide site chrome so the report prints clean */
+  header,
+  footer {
+    display: none !important;
+  }
+
+  .booklet {
+    color: #111 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Each major block starts on a fresh page */
+  .booklet-page:not(:first-child) {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .booklet-page {
+    break-inside: avoid-page;
+  }
+
+  .booklet img {
+    max-height: 240mm;
+  }
+}

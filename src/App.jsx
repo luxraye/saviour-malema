@@ -6,6 +6,7 @@ import { Footer } from "./components/Footer";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { useDonationModal } from "./context/DonationContext";
 import { HomePage } from "./pages/HomePage";
+import { UrgentNeedsPage } from "./pages/UrgentNeedsPage";
 import { BlogPage } from "./pages/BlogPage";
 import { BlogPostPage } from "./pages/BlogPostPage";
 import { LoginPage } from "./pages/LoginPage";
@@ -31,6 +32,7 @@ function AppShell() {
 
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/urgent-needs" element={<UrgentNeedsPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/login" element={<LoginPage />} />

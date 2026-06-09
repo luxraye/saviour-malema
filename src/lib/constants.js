@@ -371,3 +371,150 @@ export const INQUIRY_INTERESTS = [
   "Corporate Partnership",
   "General Enquiry",
 ];
+
+// ── School needs (documented urgent shortages) ───────────
+// Sourced from official request letters received by the foundation.
+export const defaultSchoolNeeds = [
+  {
+    id: "school-mabumahibidu",
+    school: "Mabumahibidu Primary School",
+    location: "Bobonong",
+    accent: "ember",
+    letter_date: "2026-04-20",
+    signatory: "G.M. Mmalane, School Head",
+    contact: "Tel/Fax 2619040 · mabumahibidups@gmail.com · P.O. Box 168, Bobonong",
+    headline: "Three classes have been taught outside under trees for the past eight years.",
+    stats: [
+      { value: "8 yrs", label: "Classroom shortage" },
+      { value: "3", label: "Classes held outdoors" },
+      { value: "26", label: "Learners need uniforms" },
+    ],
+    needs: [
+      "Classrooms — a serious shortage that has persisted for eight years",
+      "Relief for the 3 classes taught outside under trees, regardless of bad weather",
+      "A proper classroom for the reception class, currently housed in a storeroom",
+      "Full school uniforms and supplies for 26 identified less-privileged learners",
+    ],
+    quote:
+      "We have a serious shortage of classrooms which have been so for the past eight (8) years. Currently we have three (3) classes which are taught outside under the trees, regardless of bad weather.",
+    ask: "The school has formally asked the foundation to \"adopt\" them for ongoing support.",
+  },
+  {
+    id: "school-bobonong",
+    school: "Bobonong Primary School",
+    location: "Bobonong",
+    accent: "gold",
+    letter_date: "2026-04-24",
+    signatory: "Kgomotsego Mothelo, School Head",
+    contact: "Tel/Fax (+267) 2619207 · P.O. Box 48, Bobonong",
+    headline: "Special Unit learners need a safe, sheltered space for their pre-vocational work.",
+    stats: [
+      { value: "3", label: "Priority structures" },
+      { value: "1", label: "Special Unit to support" },
+    ],
+    needs: [
+      "An assembly shelter for learners",
+      "A rubbish shelter to keep the grounds clean and safe",
+      "A green house / shade for Special Unit learners' pre-vocational activities",
+    ],
+    quote:
+      "A shade in which our Special Unit learners can use it during their pre-vocational activities.",
+    ask: "Banking on your usual cooperation.",
+  },
+  {
+    id: "school-sorilatholo",
+    school: "Sorilatholo Primary School",
+    location: "Letlhakeng",
+    accent: "grove",
+    letter_date: "2026-04-22",
+    signatory: "N.M. Setshwantsho, School Head",
+    contact: "Tel 5960935 / 78031809 · P.O. Box 549, Letlhakeng",
+    headline: "396 learners in a remote community where uniform and food support has dried up.",
+    stats: [
+      { value: "396", label: "Children enrolled" },
+      { value: "0", label: "Computers for research" },
+    ],
+    needs: [
+      "School uniforms, toiletries and stationery for learners",
+      "A computer lab for research and independent study",
+      "A photocopying machine",
+      "Office furniture",
+    ],
+    quote:
+      "Students are unfamiliar with technology; a computer lab is needed for research, independent study and improving results — in support of the vision of 'AN EDUCATED AND INFORMED NATION.'",
+    ask: "Uniform and food support previously provided by Social & Community Development stopped due to the national economic recession.",
+  },
+];
+
+// Identified learners from Mabumahibidu's uniform sizing list.
+export const mabumahibiduLearners = [
+  { name: "Abigail Madumela", grade: "—", gender: "F" },
+  { name: "Thabiso Richard", grade: "STD 3", gender: "M" },
+  { name: "Leora Hill", grade: "STD 3", gender: "M" },
+  { name: "Katlo Modire", grade: "STD 4", gender: "M" },
+  { name: "Millicent Mosolobetsi", grade: "STD 4", gender: "F" },
+  { name: "Trinity Mothlapo", grade: "STD 1", gender: "M" },
+  { name: "Maungo Ngaluwe", grade: "STD 2", gender: "F" },
+  { name: "Tshepho Selinda", grade: "STD 1", gender: "F" },
+  { name: "Nobantle Modise", grade: "—", gender: "M" },
+  { name: "Keametse Morgan", grade: "STD 1", gender: "F" },
+  { name: "Boitumelo Ogakile", grade: "STD 5", gender: "M" },
+  { name: "Areta Letshwetse", grade: "—", gender: "M" },
+  { name: "Prince Galetone", grade: "—", gender: "M" },
+  { name: "Sandy Badireng", grade: "—", gender: "F" },
+  { name: "Kagiso Jinglin", grade: "STD 5", gender: "M" },
+  { name: "Leano Mphodi", grade: "STD 6", gender: "F" },
+  { name: "Precious Madumela", grade: "STD 7", gender: "F" },
+  { name: "Baroloki Cheng", grade: "STD 6", gender: "M" },
+  { name: "Brian Barathuse", grade: "—", gender: "M" },
+  { name: "Phoebe Modisa", grade: "STD 1", gender: "F" },
+  { name: "Dwayne Malesela", grade: "STD 1", gender: "M" },
+  { name: "Tapiwa Raphala", grade: "STD 1", gender: "F" },
+  { name: "Sarona Mphodi", grade: "STD 6", gender: "F" },
+  { name: "Tebogo Dimpisi", grade: "STD 5", gender: "F" },
+  { name: "Tauraye Richard", grade: "STD 5", gender: "M" },
+  { name: "Itumeleng Moenyane", grade: "STD 2", gender: "F" },
+];
+
+// Foundation banking details (from Stanbic Bank confirmation letter).
+export const foundationBankDetails = {
+  bank: "Stanbic Bank Botswana",
+  branch: "Selebi Phikwe Branch",
+  accountName: "Saviour Malema Foundation",
+  accountNumber: "9060006517566",
+  branchCode: "065767",
+  swift: "SBICBWGX",
+  signatories: "Saviour Malema · Betty Matlhodi",
+};
+
+// Scanned supporting documents (served from /public/letters).
+export const schoolLetterDocs = [
+  {
+    src: "/letters/mabumahibidu-request.jpeg",
+    caption: "Mabumahibidu Primary School — request for assistance (20 Apr 2026)",
+  },
+  {
+    src: "/letters/bobonong-needs.jpeg",
+    caption: "Bobonong Primary School — statement of needs (24 Apr 2026)",
+  },
+  {
+    src: "/letters/sorilatholo-request.jpeg",
+    caption: "Sorilatholo Primary School — request for donations (22 Apr 2026)",
+  },
+  {
+    src: "/letters/uniform-sizing-1.jpeg",
+    caption: "Uniform sizing list — identified learners (page 1)",
+  },
+  {
+    src: "/letters/uniform-sizing-2.jpeg",
+    caption: "Uniform sizing list — identified learners (page 2)",
+  },
+  {
+    src: "/letters/foundation-appeal.jpeg",
+    caption: "Saviour Malema Foundation — donation appeal letter",
+  },
+  {
+    src: "/letters/stanbic-confirmation.jpeg",
+    caption: "Stanbic Bank Botswana — account confirmation",
+  },
+];

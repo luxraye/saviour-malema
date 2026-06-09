@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Heart, CheckCircle, Users, CalendarCheck, Handshake } from "lucide-react";
+import { ArrowRight, Heart, CheckCircle, Users, CalendarCheck, Handshake, School, AlertCircle, MapPin, BookOpen } from "lucide-react";
 import { MomentWheel3D } from "../components/MomentWheel3D";
 import { BlogCard } from "../components/BlogCard";
 import { useMoments } from "../hooks/useMoments";
@@ -10,7 +10,7 @@ import { useSiteSettings } from "../hooks/useSiteSettings";
 import { useDonationModal } from "../context/DonationContext";
 import { useServices } from "../hooks/useServices";
 import { useTeam } from "../hooks/useTeam";
-import { SERVICE_ICON_MAP } from "../lib/constants";
+import { SERVICE_ICON_MAP, defaultSchoolNeeds } from "../lib/constants";
 import { formatDate } from "../utils/formatDate";
 
 const ACCENT_CLASSES = {
@@ -355,6 +355,91 @@ export function HomePage() {
               onSpin={spinWheel}
               onSelect={setActiveMoment}
             />
+          </div>
+        </div>
+      </section>
+
+      {/* ── SCHOOL NEEDS ────────────────────────────────── */}
+      <section id="schools" className="bg-[#0d1420] px-5 py-24 sm:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="max-w-2xl">
+            <p className="section-kicker">Urgent school needs</p>
+            <h2 className="section-title">Documented shortages in our schools.</h2>
+            <p className="mt-5 leading-7 text-white/65">
+              These are real requests, signed and stamped by school heads in the Bobonong and
+              Letlhakeng areas. Each one represents children learning without the basics. Your
+              support turns these letters into classrooms, uniforms, and dignity.
+            </p>
+          </div>
+
+          <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {defaultSchoolNeeds.map(({ id, school, location, accent, headline, stats, needs }) => (
+              <article
+                key={id}
+                className="flex flex-col rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:border-white/20 hover:bg-white/8"
+              >
+                <div
+                  className={`inline-flex w-fit items-center justify-center rounded-xl border p-3 ${ACCENT_CLASSES[accent]}`}
+                >
+                  <School className="size-6" aria-hidden="true" />
+                </div>
+                <h3 className="mt-5 text-lg font-black text-white">{school}</h3>
+                <p className="mt-1 inline-flex items-center gap-1.5 text-xs font-bold text-white/45">
+                  <MapPin className="size-3.5" aria-hidden="true" />
+                  {location}
+                </p>
+                <p className="mt-4 flex gap-2 text-sm leading-6 text-white/75">
+                  <AlertCircle
+                    className={`mt-0.5 size-4 shrink-0 ${ACCENT_CLASSES[accent].split(" ")[0]}`}
+                    aria-hidden="true"
+                  />
+                  <span>{headline}</span>
+                </p>
+
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {stats.map((s) => (
+                    <span
+                      key={s.label}
+                      className="rounded-lg border border-white/10 bg-white/5 px-3 py-1.5 text-xs"
+                    >
+                      <strong className="text-white">{s.value}</strong>{" "}
+                      <span className="text-white/50">{s.label}</span>
+                    </span>
+                  ))}
+                </div>
+
+                <ul className="mt-5 grid gap-2 border-t border-white/10 pt-5">
+                  {needs.map((need) => (
+                    <li key={need} className="flex gap-2.5 text-sm leading-6 text-white/65">
+                      <span
+                        className={`mt-2 size-1.5 shrink-0 rounded-full ${
+                          accent === "ember" ? "bg-ember" : accent === "gold" ? "bg-gold" : "bg-grove"
+                        }`}
+                      />
+                      {need}
+                    </li>
+                  ))}
+                </ul>
+              </article>
+            ))}
+          </div>
+
+          <div className="mt-10 flex flex-wrap justify-center gap-3">
+            <Link
+              to="/urgent-needs"
+              className="inline-flex items-center gap-2 rounded-full bg-gold px-7 py-3 text-sm font-black text-midnight shadow-lg shadow-gold/20 transition hover:-translate-y-0.5"
+            >
+              <BookOpen className="size-4" />
+              See the full needs report
+            </Link>
+            <button
+              type="button"
+              onClick={() => openDonation()}
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/8 px-7 py-3 text-sm font-black text-white transition hover:bg-white/15"
+            >
+              <Heart className="size-4" />
+              Help a school today
+            </button>
           </div>
         </div>
       </section>
