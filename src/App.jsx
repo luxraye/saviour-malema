@@ -11,6 +11,7 @@ import { UrgentNeedsPage } from "./pages/UrgentNeedsPage";
 import { BlogPage } from "./pages/BlogPage";
 import { BlogPostPage } from "./pages/BlogPostPage";
 import { LoginPage } from "./pages/LoginPage";
+import { ResetPasswordPage } from "./pages/ResetPasswordPage";
 import { AdminLayout } from "./pages/admin/AdminLayout";
 import { DashboardAdmin } from "./pages/admin/DashboardAdmin";
 import { MomentsAdmin } from "./pages/admin/MomentsAdmin";
@@ -37,6 +38,7 @@ function AppShell() {
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/blog/:slug" element={<BlogPostPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route
           path="/admin"
           element={
