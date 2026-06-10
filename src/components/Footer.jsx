@@ -21,7 +21,7 @@ const footerLinks = {
 
 export function Footer({ openDonation }) {
   return (
-    <footer className="bg-[#0a0f1a] text-white/80">
+    <footer className="bg-surface-deep text-white/80">
       <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8">
         <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr]">
           <div>

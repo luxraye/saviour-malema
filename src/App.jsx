@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+import { ThemeProvider } from "./context/ThemeContext";
 import { DonationProvider } from "./context/DonationContext";
 import { DonationModal } from "./components/DonationModal";
 import { Navbar } from "./components/Navbar";
@@ -62,9 +63,11 @@ function AppShell() {
 
 function App() {
   return (
-    <DonationProvider>
-      <AppShell />
-    </DonationProvider>
+    <ThemeProvider>
+      <DonationProvider>
+        <AppShell />
+      </DonationProvider>
+    </ThemeProvider>
   );
 }
 

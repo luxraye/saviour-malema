@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { ArrowRight, Heart, CheckCircle, Users, CalendarCheck, Handshake, School, AlertCircle, MapPin, BookOpen } from "lucide-react";
 import { MomentWheel3D } from "../components/MomentWheel3D";
 import { BlogCard } from "../components/BlogCard";
+import { Reveal } from "../components/Reveal";
+import { CountUp } from "../components/CountUp";
 import { useMoments } from "../hooks/useMoments";
 import { useBlogPosts } from "../hooks/useBlogPosts";
 import { usePartners } from "../hooks/usePartners";
@@ -57,16 +59,19 @@ export function HomePage() {
       {/* ── HERO ─────────────────────────────────────────── */}
       <section
         id="home"
-        className="relative min-h-screen bg-cover bg-center"
+        className="relative min-h-screen overflow-hidden bg-cover bg-center"
         style={{
           backgroundImage:
-            "linear-gradient(135deg,rgba(10,20,34,0.88),rgba(22,121,111,0.38)),url('https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=2400&q=85')",
+            "linear-gradient(135deg, rgb(var(--c-surface-deep) / 0.9), rgb(var(--c-grove) / 0.4)), url('https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=2400&q=85')",
         }}
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(242,201,76,0.12),transparent_40%)]" />
+        {/* Drifting theme-coloured glow blobs */}
+        <div className="glow-blob left-[8%] top-[18%] size-72 animate-glow-drift bg-gold/25" />
+        <div className="glow-blob right-[6%] top-[30%] size-80 animate-glow-drift-slow bg-ember/20" />
+        <div className="glow-blob bottom-[8%] left-[40%] size-72 animate-glow-drift bg-grove/20" />
 
         <div className="relative z-10 mx-auto grid max-w-7xl gap-12 px-5 pb-24 pt-32 sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:pb-32 lg:pt-36">
-          <div>
+          <div className="animate-reveal-up">
             <p className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-bold text-white/90 shadow-glass backdrop-blur-xl">
               <CheckCircle className="size-4 text-gold" aria-hidden="true" />
               Community-first NGO · Botswana
@@ -160,7 +165,7 @@ export function HomePage() {
             <div key={label} className="flex items-center gap-3 px-4 py-3">
               <Icon className="size-6 shrink-0 text-midnight/60" aria-hidden="true" />
               <div>
-                <p className="text-2xl font-black text-midnight">{value}</p>
+                <CountUp value={value} className="text-2xl font-black text-midnight" />
                 <p className="text-[11px] font-bold uppercase tracking-wide text-midnight/60">{label}</p>
               </div>
             </div>
@@ -171,25 +176,27 @@ export function HomePage() {
       {/* ── PROGRAMS / SERVICES ──────────────────────────── */}
       <section id="programs" className="bg-midnight px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="max-w-2xl">
+          <Reveal className="max-w-2xl">
             <p className="section-kicker">Our programmes</p>
             <h2 className="section-title">How we show up for communities.</h2>
             <p className="mt-5 leading-7 text-white/65">
               Six focused programmes, each targeting a distinct dimension of need — from immediate
               food relief to long-term youth development.
             </p>
-          </div>
+          </Reveal>
 
           <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {[...services].sort((a, b) => a.order - b.order).map(({ id, icon_name, title, description, stat, accent }) => {
+            {[...services].sort((a, b) => a.order - b.order).map(({ id, icon_name, title, description, stat, accent }, i) => {
               const Icon = SERVICE_ICON_MAP[icon_name] || SERVICE_ICON_MAP.Package;
               return (
-                <article
+                <Reveal
+                  as="article"
                   key={id}
-                  className="group rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:border-white/20 hover:bg-white/8"
+                  delay={i * 70}
+                  className="lift-card group rounded-2xl border border-white/10 bg-white/5 p-6 hover:border-white/20 hover:bg-white/8 hover:shadow-glow"
                 >
                   <div
-                    className={`inline-flex items-center justify-center rounded-xl border p-3 ${ACCENT_CLASSES[accent]}`}
+                    className={`inline-flex items-center justify-center rounded-xl border p-3 transition duration-300 group-hover:-rotate-6 group-hover:scale-110 ${ACCENT_CLASSES[accent]}`}
                   >
                     <Icon className="size-6" aria-hidden="true" />
                   </div>
@@ -198,7 +205,7 @@ export function HomePage() {
                   <p className={`mt-4 text-xs font-black uppercase tracking-wide ${ACCENT_CLASSES[accent].split(" ")[0]}`}>
                     {stat}
                   </p>
-                </article>
+                </Reveal>
               );
             })}
           </div>
@@ -217,12 +224,12 @@ export function HomePage() {
       </section>
 
       {/* ── ABOUT US ─────────────────────────────────────── */}
-      <section id="about" className="bg-[#0d1420] px-5 py-24 sm:px-8">
+      <section id="about" className="bg-surface px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-14 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
 
             {/* Foundation story */}
-            <div>
+            <Reveal>
               <p className="section-kicker">About us</p>
               <h2 className="section-title">Built on a promise to serve.</h2>
               <p className="mt-5 leading-7 text-white/65">
@@ -270,7 +277,7 @@ export function HomePage() {
                 <Heart className="size-4" />
                 Join our mission
               </button>
-            </div>
+            </Reveal>
 
             {/* Team grid */}
             <div>
@@ -278,10 +285,11 @@ export function HomePage() {
                 Our team
               </p>
               <div className="grid gap-4 sm:grid-cols-2">
-                {[...members].sort((a, b) => a.order - b.order).map((member) => (
-                  <div
+                {[...members].sort((a, b) => a.order - b.order).map((member, i) => (
+                  <Reveal
                     key={member.id}
-                    className="rounded-2xl border border-white/8 bg-white/3 p-5 transition hover:border-white/15"
+                    delay={i * 70}
+                    className="lift-card rounded-2xl border border-white/8 bg-white/3 p-5 hover:border-white/15 hover:bg-white/5"
                   >
                     {member.photo_url ? (
                       <img
@@ -297,7 +305,7 @@ export function HomePage() {
                     <h3 className="mt-4 font-black text-white">{member.name}</h3>
                     <p className="text-xs font-bold text-gold">{member.role}</p>
                     <p className="mt-2 text-sm leading-6 text-white/55">{member.bio}</p>
-                  </div>
+                  </Reveal>
                 ))}
               </div>
             </div>
@@ -309,13 +317,13 @@ export function HomePage() {
       {/* ── MOMENTS WHEEL ───────────────────────────────── */}
       <section
         id="moments"
-        className="relative px-5 py-24 sm:px-8"
+        className="relative overflow-hidden px-5 py-24 sm:px-8"
         style={{
           background:
-            "linear-gradient(180deg,#111827 0%,#0d1822 50%,#111827 100%)",
+            "linear-gradient(180deg, rgb(var(--c-midnight)) 0%, rgb(var(--c-surface)) 50%, rgb(var(--c-midnight)) 100%)",
         }}
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(244,96,54,0.15),transparent_40%)]" />
+        <div className="glow-blob right-[10%] top-[12%] size-96 animate-glow-drift-slow bg-ember/20" />
         <div className="relative mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
             <div>
@@ -360,9 +368,9 @@ export function HomePage() {
       </section>
 
       {/* ── SCHOOL NEEDS ────────────────────────────────── */}
-      <section id="schools" className="bg-[#0d1420] px-5 py-24 sm:px-8">
+      <section id="schools" className="bg-surface px-5 py-24 sm:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="max-w-2xl">
+          <Reveal className="max-w-2xl">
             <p className="section-kicker">Urgent school needs</p>
             <h2 className="section-title">Documented shortages in our schools.</h2>
             <p className="mt-5 leading-7 text-white/65">
@@ -370,13 +378,15 @@ export function HomePage() {
               Letlhakeng areas. Each one represents children learning without the basics. Your
               support turns these letters into classrooms, uniforms, and dignity.
             </p>
-          </div>
+          </Reveal>
 
           <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {defaultSchoolNeeds.map(({ id, school, location, accent, headline, stats, needs }) => (
-              <article
+            {defaultSchoolNeeds.map(({ id, school, location, accent, headline, stats, needs }, i) => (
+              <Reveal
+                as="article"
                 key={id}
-                className="flex flex-col rounded-2xl border border-white/10 bg-white/5 p-6 transition hover:border-white/20 hover:bg-white/8"
+                delay={i * 80}
+                className="lift-card flex flex-col rounded-2xl border border-white/10 bg-white/5 p-6 hover:border-white/20 hover:bg-white/8 hover:shadow-glow"
               >
                 <div
                   className={`inline-flex w-fit items-center justify-center rounded-xl border p-3 ${ACCENT_CLASSES[accent]}`}
@@ -420,7 +430,7 @@ export function HomePage() {
                     </li>
                   ))}
                 </ul>
-              </article>
+              </Reveal>
             ))}
           </div>
 
@@ -463,8 +473,10 @@ export function HomePage() {
 
           {featuredPosts.length > 0 ? (
             <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {featuredPosts.map((post) => (
-                <BlogCard key={post.id} post={post} />
+              {featuredPosts.map((post, i) => (
+                <Reveal key={post.id} delay={i * 80}>
+                  <BlogCard post={post} />
+                </Reveal>
               ))}
             </div>
           ) : (
@@ -476,9 +488,9 @@ export function HomePage() {
       </section>
 
       {/* ── PARTNERS ─────────────────────────────────────── */}
-      <section id="partners" className="bg-[#0a0f1a] px-5 py-20 sm:px-8">
+      <section id="partners" className="bg-surface-deep px-5 py-20 sm:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="text-center">
+          <Reveal className="text-center">
             <p className="section-kicker">Partners & collaborators</p>
             <h2 className="mt-3 text-3xl font-black text-white sm:text-4xl">
               The organisations walking with us.
@@ -487,22 +499,24 @@ export function HomePage() {
               We amplify impact through trusted partnerships — from food redistribution and healthcare
               to youth employment and education.
             </p>
-          </div>
+          </Reveal>
 
           <div className="mt-12 flex flex-wrap justify-center gap-4">
-            {featuredPartners.map((partner) => {
+            {featuredPartners.map((partner, i) => {
               const initials = partner.name
                 .split(" ")
                 .map((w) => w[0])
                 .slice(0, 2)
                 .join("");
               return (
-                <a
+                <Reveal
+                  as="a"
                   key={partner.id}
+                  delay={i * 60}
                   href={partner.website || "#"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-5 py-3.5 transition hover:border-gold/30 hover:bg-white/10"
+                  className="lift-card group flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-5 py-3.5 hover:border-gold/30 hover:bg-white/10"
                 >
                   {partner.logo_url ? (
                     <img
@@ -523,7 +537,7 @@ export function HomePage() {
                       <p className="text-xs text-white/45">{partner.description}</p>
                     )}
                   </div>
-                </a>
+                </Reveal>
               );
             })}
           </div>
@@ -545,7 +559,10 @@ export function HomePage() {
       <section
         className="relative overflow-hidden bg-gold px-5 py-20 sm:px-8"
       >
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_50%,rgba(244,96,54,0.25),transparent_55%)]" />
+        <div className="glow-blob right-[12%] top-1/2 size-96 -translate-y-1/2 bg-ember/30" />
+        <div className="sheen-wrap">
+          <div className="sheen-bar animate-sheen" />
+        </div>
         <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-6 text-center">
           <p className="text-sm font-black uppercase tracking-[0.22em] text-midnight/60">
             Make a difference

@@ -11,6 +11,31 @@ export const PLEDGE_SETTINGS_KEY = "tsmf_pledge_settings";
 export const BLOG_KEY           = "tsmf_blog_posts";
 export const SERVICES_KEY       = "tsmf_services";
 export const TEAM_KEY           = "tsmf_team";
+export const THEME_KEY          = "tsmf_theme";
+
+// ── Theme palettes (toggled from the admin dashboard) ────
+export const DEFAULT_THEME = "sunrise";
+
+export const THEMES = [
+  {
+    id: "sunrise",
+    name: "Sunrise Ember",
+    tagline: "Fiery reds and coral — bold and urgent.",
+    swatches: ["#DC3545", "#FF6347", "#9B2C3C", "#120709"],
+  },
+  {
+    id: "botswana",
+    name: "Botswana Blue",
+    tagline: "Civic and trustworthy, flag-inspired.",
+    swatches: ["#60A5FA", "#3B82F6", "#0EA5E9", "#0A0F1A"],
+  },
+  {
+    id: "acacia",
+    name: "Acacia Gold",
+    tagline: "Ochre gold and savanna green — earthy and natural.",
+    swatches: ["#DAAF44", "#A06E30", "#3D9E48", "#0C1209"],
+  },
+];
 
 // ── Icon registry for programme cards ────────────────────
 export const SERVICE_ICON_MAP = {

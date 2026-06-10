@@ -5,6 +5,7 @@
 
 
 -- ─── Drop existing tables (clean slate) ─────────────────────────
+DROP TABLE IF EXISTS site_settings       CASCADE;
 DROP TABLE IF EXISTS partners            CASCADE;
 DROP TABLE IF EXISTS team_members        CASCADE;
 DROP TABLE IF EXISTS services            CASCADE;
@@ -105,6 +106,13 @@ CREATE TABLE partners (
   created_at  TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- ─── Site settings (key/value, e.g. active theme) ───────────────
+CREATE TABLE site_settings (
+  key        TEXT        PRIMARY KEY,
+  value      TEXT        NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
 
 -- ═══════════════════════════════════════════════════════════════
 -- ROW LEVEL SECURITY
@@ -194,6 +202,15 @@ CREATE POLICY "partners_select_public"
 CREATE POLICY "partners_all_admin"
   ON partners FOR ALL USING (auth.role() = 'authenticated');
 
+-- ─── site_settings ───────────────────────────────────────────────
+ALTER TABLE site_settings ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "site_settings_select_public"
+  ON site_settings FOR SELECT USING (true);
+
+CREATE POLICY "site_settings_all_admin"
+  ON site_settings FOR ALL USING (auth.role() = 'authenticated');
+
 
 -- ═══════════════════════════════════════════════════════════════
 -- STORAGE
@@ -202,6 +219,13 @@ CREATE POLICY "partners_all_admin"
 INSERT INTO storage.buckets (id, name, public)
   VALUES ('media', 'media', true)
   ON CONFLICT (id) DO NOTHING;
+
+-- Storage policies persist across re-runs (the drop section above only
+-- removes our own tables), so drop them first to keep this script re-runnable.
+DROP POLICY IF EXISTS "media_upload_admin"  ON storage.objects;
+DROP POLICY IF EXISTS "media_update_admin"  ON storage.objects;
+DROP POLICY IF EXISTS "media_delete_admin"  ON storage.objects;
+DROP POLICY IF EXISTS "media_select_public" ON storage.objects;
 
 CREATE POLICY "media_upload_admin"
   ON storage.objects FOR INSERT
@@ -439,3 +463,8 @@ INSERT INTO partners (id, name, website, description, featured, "order") VALUES
     true,
     6
   );
+
+-- ─── Site settings ────────────────────────────────────────────────
+INSERT INTO site_settings (key, value) VALUES
+  ('theme', 'sunrise')
+  ON CONFLICT (key) DO NOTHING;

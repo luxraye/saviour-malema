@@ -84,7 +84,7 @@ export function Navbar() {
       </button>
 
       {menuOpen && (
-        <div className="absolute right-5 top-20 z-30 w-60 rounded-2xl border border-white/15 bg-[#0d1117]/95 p-4 shadow-2xl backdrop-blur-2xl md:hidden">
+        <div className="absolute right-5 top-20 z-30 w-60 rounded-2xl border border-white/15 bg-surface-deep/95 p-4 shadow-2xl backdrop-blur-2xl md:hidden">
           {navLinks.map(({ href, label, isRoute }) =>
             isRoute ? (
               <Link

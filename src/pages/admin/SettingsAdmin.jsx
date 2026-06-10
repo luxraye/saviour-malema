@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { Save, RefreshCw, Sliders, Info } from "lucide-react";
+import { Save, RefreshCw, Sliders, Info, Palette, Check } from "lucide-react";
 import { useSiteSettings } from "../../hooks/useSiteSettings";
+import { useTheme } from "../../context/ThemeContext";
 
 export function SettingsAdmin() {
   const { pledgeSettings, saveSettings, resetSettings } = useSiteSettings();
+  const { theme, setTheme, themes } = useTheme();
   const [form, setForm] = useState({ ...pledgeSettings });
   const [saved, setSaved] = useState(false);
 
@@ -35,8 +37,56 @@ export function SettingsAdmin() {
         <p className="text-xs font-black uppercase tracking-[0.2em] text-white/30">Site configuration</p>
         <h1 className="mt-2 text-2xl font-black text-white">Settings</h1>
         <p className="mt-1 text-sm text-white/45">
-          Configure the pledge estimator displayed on the public site.
+          Configure the appearance and pledge estimator displayed on the public site.
         </p>
+      </div>
+
+      {/* ── Appearance / theme picker ─────────────────────── */}
+      <div className="mb-6 rounded-2xl border border-white/10 bg-[#0a0f1a] p-6">
+        <div className="mb-2 flex items-center gap-2">
+          <Palette className="size-4 text-gold" />
+          <h2 className="text-sm font-black text-white">Appearance</h2>
+        </div>
+        <p className="mb-5 text-sm text-white/45">
+          Choose the colour palette for the public website. Changes apply instantly and are saved
+          for all visitors.
+        </p>
+
+        <div className="grid gap-4 sm:grid-cols-3">
+          {themes.map((t) => {
+            const active = t.id === theme;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => setTheme(t.id)}
+                aria-pressed={active}
+                className={`group relative overflow-hidden rounded-2xl border p-4 text-left transition ${
+                  active
+                    ? "border-gold/70 bg-white/8 shadow-glow"
+                    : "border-white/10 bg-white/5 hover:border-white/25 hover:bg-white/8"
+                }`}
+              >
+                {active && (
+                  <span className="absolute right-3 top-3 grid size-6 place-items-center rounded-full bg-gold text-midnight">
+                    <Check className="size-3.5" />
+                  </span>
+                )}
+                <div className="flex gap-1.5">
+                  {t.swatches.map((hex) => (
+                    <span
+                      key={hex}
+                      className="size-6 rounded-full ring-1 ring-white/15"
+                      style={{ backgroundColor: hex }}
+                    />
+                  ))}
+                </div>
+                <p className="mt-4 text-sm font-black text-white">{t.name}</p>
+                <p className="mt-1 text-xs leading-5 text-white/45">{t.tagline}</p>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <form onSubmit={handleSave}>
