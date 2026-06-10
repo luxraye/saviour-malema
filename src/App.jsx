@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeContext";
 import { DonationProvider } from "./context/DonationContext";
 import { DonationModal } from "./components/DonationModal";
@@ -24,13 +24,20 @@ import { TeamAdmin } from "./pages/admin/TeamAdmin";
 
 function AppShell() {
   const { openDonation } = useDonationModal();
+  const { pathname } = useLocation();
+  const isAdminShell =
+    pathname.startsWith("/admin") ||
+    pathname === "/login" ||
+    pathname === "/reset-password";
 
   return (
     <div className="min-h-screen bg-midnight text-white">
       <DonationModal />
-      <div className="fixed inset-x-0 top-0 z-50">
-        <Navbar />
-      </div>
+      {!isAdminShell && (
+        <div className="fixed inset-x-0 top-0 z-50">
+          <Navbar />
+        </div>
+      )}
 
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -58,7 +65,7 @@ function AppShell() {
         </Route>
       </Routes>
 
-      <Footer openDonation={openDonation} />
+      {!isAdminShell && <Footer openDonation={openDonation} />}
     </div>
   );
 }
