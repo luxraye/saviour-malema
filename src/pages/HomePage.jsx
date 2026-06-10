@@ -29,7 +29,7 @@ const STAT_BAR = [
 ];
 
 export function HomePage() {
-  const { moments } = useMoments();
+  const { moments } = useMoments({ fallbackToDefaults: true });
   const { posts: blogPosts } = useBlogPosts({ publishedOnly: true });
   const { partners } = usePartners();
   const { pledgeSettings } = useSiteSettings();

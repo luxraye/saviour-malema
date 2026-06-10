@@ -9,6 +9,7 @@ export function MomentsAdmin() {
   const { moments, saveMoment, deleteMoment } = useMoments();
   const [draft, setDraft] = useState(emptyMoment);
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState("");
 
   function patch(field, value) {
     setDraft((d) => ({ ...d, [field]: value }));
@@ -17,18 +18,19 @@ export function MomentsAdmin() {
   async function handleSave(e) {
     e.preventDefault();
     setSaving(true);
-    const id =
-      draft.id ||
-      `${draft.title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}-${Date.now()}`;
-    await saveMoment({
+    setSaveError("");
+    const { error } = await saveMoment({
       ...draft,
-      id,
       image_url:
         draft.image_url ||
         "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1600&q=80",
     });
-    setDraft(emptyMoment);
     setSaving(false);
+    if (error) {
+      setSaveError(error.message || "Failed to save moment. Please try again.");
+      return;
+    }
+    setDraft(emptyMoment);
   }
 
   function handleEdit(moment) {
@@ -120,6 +122,12 @@ export function MomentsAdmin() {
               />
               Feature this moment in highlights
             </label>
+
+            {saveError && (
+              <p className="rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+                {saveError}
+              </p>
+            )}
 
             <div className="flex flex-wrap gap-3">
               <button className="admin-primary" type="submit" disabled={saving}>
